@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+#game {
+  border: 6px solid #E53481;
+  border-radius: 10px;
+  margin: auto;
+  -webkit-box-shadow: 0px 0px 135px 29px rgba(229,52,129,0.1);
+  -moz-box-shadow: 0px 0px 135px 29px rgba(229,52,129,0.1);
+  box-shadow: 0px 0px 135px 29px rgba(229,52,129,0.1);
+}
+
+.conteudo {
+  height: 100vh;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+
+canvas {
+  background-color: #2D132C;
+}
+
+body {
+  background-color: #2D132C;
+}
