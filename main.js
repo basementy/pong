@@ -1,18 +1,18 @@
 var player1 = {
-  posX: 360,
+  posX: 355,
   posY: 550,
   width: 100,
   height: 15,
-  velocity: 55,
+  velocity: 50,
   score: 0,
 };
 
 var player2 = {
-  posX: 360,
+  posX: 355,
   posY: 35,
   width: 100,
   height: 15,
-  velocity: 55,
+  velocity: 50,
   score: 0,
 };
 
@@ -34,8 +34,8 @@ function getRandomDir(min, max) {
 
 function drawScores(canvas, ctx) {
   ctx.font = '48px Poppins';
-  ctx.fillText(player1.score, 290, 300);
-  ctx.fillText(player2.score, 500, 300);
+  ctx.fillText(player1.score, 290, 325);
+  ctx.fillText(player2.score, 500, 325);
   ctx.fillStyle = "#E53481";
 }
 
@@ -89,31 +89,78 @@ function calculateBall() {
 }
 
 function verifyCollisionBallWall() {
-  if(ball.posX <= 0 || ball.posX >= (800 - ball.width)) {
+
+  if(ball.posX <= 0) {
+    ball.poX = 0;
+    ball.dirX = getRandomDir(-3, 3);
+  }
+  if(ball.posX >= (800 - ball.width)) {
+    ball.poX = 800 - ball.width;
     ball.dirX = getRandomDir(-3, 3);
   }
 
   if(ball.posY <= 0) {
     player1.score++;
-    ball.posX = canvas.width / 2;
-    ball.posY = canvas.height / 2;
-    ball.dirY = getRandomDir(-5, 5);
-    ball.dirX = getRandomDir(-3, 3);
+    update();
   }
-  if(ball.posY >= 600) {
+  if(ball.posY >= (600 - ball.height)) {
     player2.score++;
-    ball.posX = canvas.width / 2;
-    ball.posY = canvas.height / 2;
-    ball.dirY = getRandomDir(-5, 5);
-    ball.dirX = getRandomDir(-3, 3);
+    update();
   }
-  if(ball.posY == (player1.posY - ball.height)) {
-    console.log("Alo");
+
+  if(player1.posX <= 0) {
+    player1.posX = 0;
+  }
+  if(player1.posX >= (800 - player1.width)) {
+    player1.posX = (800 - player1.width);
+  }
+
+  if(player2.posX <= 0) {
+    player2.posX = 0;
+  }
+  if(player2.posX >= (800 - player2.width)) {
+    player2.posX = (800 - player2.width);
+  }
+}
+
+function verifyCollisionPlayer() {
+  if((ball.posY >= (player1.posY - 30)) && (ball.posX >= player1.posX) && ball.posX <= (player1.posX + player1.width)) {
+    ball.dirY = getRandomDir(-1, -3);
+    ball.dirX = getRandomDir(0, 3);
+  }
+  if((ball.posY <= (player2.posY + 30)) && (ball.posX >= player2.posX) && ball.posX <= (player2.posX + player2.width)) {
+    ball.dirY = getRandomDir(1, 3);
+    ball.dirX = getRandomDir(-3, 0);
   }
 }
 
 function verifyCollisions() {
+  verifyCollisionPlayer();
   verifyCollisionBallWall();
+}
+
+function update() {
+  ball.posX = canvas.width / 2;
+  ball.posY = canvas.height / 2;
+  ball.dirY = getRandomDir(-3, 3);
+  ball.dirX = getRandomDir(-3, 3);
+}
+
+// Checa vencedor e possibilidade de bugs
+function check() {
+  var title = document.querySelector("a");
+  if(player1.score == 3 || player2.score == 3) {
+    ball.posX = canvas.width / 2;
+    ball.posY = canvas.height / 2;
+    if(player1.score == 3) {
+      title.innerHTML = "O Player 1 ganhou! Clique aqui para recomeçar";
+    }else if(player2.score == 3) {
+      title.innerHTML = "O Player 2 ganhou! Clique aqui para recomeçar";
+    }
+  }
+  if(ball.dirY == 0) {
+    update();
+  }
 }
 
 function gameLoop() {
@@ -121,6 +168,7 @@ function gameLoop() {
   calculateBall();
   verifyCollisions();
   draw(canvas, ctx);
+  check();
   console.log(ball.posY);
 }
 
@@ -128,9 +176,9 @@ window.onload = function() {
   var canvas = document.getElementById('game');
   ball.posX = canvas.width / 2;
   ball.posY = canvas.height / 2;
-  ball.dirY = getRandomDir(-5, 5);
-  ball.dirX = getRandomDir(-3, 2);
-  setInterval(gameLoop, 1100 / 60);
+  ball.dirY = getRandomDir(-3, 3);
+  ball.dirX = getRandomDir(-3, 3);
+  setInterval(gameLoop, 1000 / 60);
 }
 
 window.onkeydown = function(key) {
